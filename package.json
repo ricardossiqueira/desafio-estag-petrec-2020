@@ -1,0 +1,20 @@
+{
+  "name": "desafio-estag-petrec-2020",
+  "version": "1.0.0",
+  "main": "index.js",
+  "source": "src/pages/index.html",
+  "repository": "https://github.com/raphaelfv/desafio-estag-petrec-2020",
+  "author": "ricardossiqueira <ricardosantossiqueira@poli.ufrj.br>",
+  "license": "MIT",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.0"
+  },
+  "dependencies": {
+    "ol": "^7.1.0"
+  }
+}
