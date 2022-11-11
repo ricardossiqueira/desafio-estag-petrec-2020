@@ -7,52 +7,63 @@ import View from 'ol/View';
 import { DragBox, Select } from 'ol/interaction';
 import { Fill, Stroke, Style } from 'ol/style';
 import { platformModifierKeyOnly } from 'ol/events/condition';
+import { add } from 'ol/coordinate';
+
+const colorScheme = {
+  selected: {
+    background: '#10151b',
+    stroke: '#f5f5f5',
+  },
+  base: '#18222f',
+  background: '#10151b',
+};
 
 const vectorSource = new VectorSource({
   url: 'https://raw.githubusercontent.com/raphaelfv/desafio-estag-petrec-2020/main/estados.geojson',
   format: new GeoJSON(),
 });
 
-const style = new Style({
-  fill: new Fill({
-    color: '#eeeeee',
-  }),
+const view = new View({
+  center: [0, 0],
+  zoom: 1,
 });
 
 const map = new Map({
   layers: [
     new VectorLayer({
       source: vectorSource,
-      background: '#1a2b39',
-      style(feature) {
-        const color = feature.get('COLOR_BIO') || '#eeeeee';
-        style.getFill().setColor(color);
-        return style;
-      },
+      // background style
+      background: colorScheme.background,
+      // map style
+      style: new Style({
+        fill: new Fill({
+          color: colorScheme.base,
+        }),
+        stroke: new Stroke({
+          color: colorScheme.background,
+          width: 1,
+        }),
+      }),
     }),
   ],
   target: 'map',
-  view: new View({
-    center: [0, 0],
-    zoom: 2,
-    constrainRotation: 16,
-  }),
+  view,
 });
 
 const selectedStyle = new Style({
   fill: new Fill({
-    color: '#ff0000',
+    color: colorScheme.selected,
   }),
   stroke: new Stroke({
-    color: '#ff0000',
-    width: 2,
+    color: colorScheme.selected.stroke,
+    width: 1,
   }),
 });
 
 // a normal select interaction to handle click
 const select = new Select({
-  style(feature) {
-    const color = feature.get('COLOR_BIO') || '#eeeeee';
+  style() {
+    const color = colorScheme.selected.background;
     selectedStyle.getFill().setColor(color);
     return selectedStyle;
   },
@@ -64,6 +75,7 @@ const selectedFeatures = select.getFeatures();
 // a DragBox interaction used to select features by drawing boxes
 const dragBox = new DragBox({
   condition: platformModifierKeyOnly,
+  className: 'drag-box',
 });
 
 map.addInteraction(dragBox);
@@ -115,8 +127,19 @@ const infoBox = document.getElementById('info');
 selectedFeatures.on(['add', 'remove'], () => {
   const names = selectedFeatures.getArray().map((feature) => feature.get('name'));
   if (names.length > 0) {
-    infoBox.innerHTML = names.join(', ');
+    infoBox.innerHTML = '';
+    names.forEach((name) => {
+      const p = document.createElement('p');
+      p.innerHTML = name;
+      infoBox.appendChild(p);
+    });
+
+    // infoBox.innerHTML = names.join(', ');
   } else {
-    infoBox.innerHTML = 'None';
+    infoBox.innerHTML = 'Click on a state or Ctrl+Click to select multiple states';
   }
 });
+
+// correct the map position and center for better experience
+map.getView().setCenter(add([-6000000, -1740000], view.getCenter()));
+map.getView().setZoom(4.5);
