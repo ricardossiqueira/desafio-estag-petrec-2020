@@ -9,17 +9,19 @@ import { Fill, Stroke, Style } from 'ol/style';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import { add } from 'ol/coordinate';
 
+const geojsonUrl = 'https://raw.githubusercontent.com/raphaelfv/desafio-estag-petrec-2020/main/estados.geojson';
+
 const colorScheme = {
   selected: {
-    background: '#10151b',
-    stroke: '#f5f5f5',
+    background: '#A8A8A8',
+    stroke: '#292929',
   },
-  base: '#18222f',
-  background: '#10151b',
+  base: '#676767',
+  background: '#292929',
 };
 
 const vectorSource = new VectorSource({
-  url: 'https://raw.githubusercontent.com/raphaelfv/desafio-estag-petrec-2020/main/estados.geojson',
+  url: geojsonUrl,
   format: new GeoJSON(),
 });
 
@@ -136,7 +138,7 @@ selectedFeatures.on(['add', 'remove'], () => {
 
     // infoBox.innerHTML = names.join(', ');
   } else {
-    infoBox.innerHTML = 'Click on a state or Ctrl+Click to select multiple states';
+    infoBox.innerHTML = '';
   }
 });
 
