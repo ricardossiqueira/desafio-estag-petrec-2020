@@ -21,7 +21,7 @@ Após clonar o repositório
 ```bash
   cd desafio-estag-petrec-2020
   yarn # ou npm install
-  yarn start
+  yarn start # ou npm start
 ```
 
 Após isso o projeto deve ter sido incializado em <http://localhost:1234>
